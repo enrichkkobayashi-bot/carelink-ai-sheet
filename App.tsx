@@ -11,6 +11,16 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
+// サイドバーのURL設定を定数として定義
+const SIDEBAR_URLS = {
+  MONITORING: 'https://enrichkkobayashi-bot.github.io/my_project-moni/',
+  MEETING: 'https://my-project-kaigi.vercel.app/',
+  CARE_PLAN: 'https://enrichkkobayashi-bot.github.io/kaigo-plan-system/',
+  SUPPORT_PLAN: 'https://care-plan-assistant.vercel.app/',
+  ADMISSION_SHEET: 'https://carelink-ai-sheet.vercel.app/',
+};
+
+
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
@@ -202,27 +212,39 @@ const App: React.FC = () => {
           </div>
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             <div className="text-gray-500 text-xs font-bold uppercase mb-3 px-2 tracking-wider">Navigation</div>
-            {[
-              { name: 'モニタリング', url: import.meta.env.VITE_APP_MONITORING_URL || '#', active: false },
-              { name: '担当者会議', url: import.meta.env.VITE_APP_MEETING_URL || '#', active: false },
-              { name: '要介護プラン', url: import.meta.env.VITE_APP_CARE_PLAN_URL || '#', active: false },
-              { name: '要支援プラン', url: import.meta.env.VITE_APP_SUPPORT_PLAN_URL || '#', active: false },
-              { name: '入院時情報連携', url: import.meta.env.VITE_APP_ADMISSION_SHEET_URL || '#', active: true },
-            ].map((item) => (
-              <a
-                key={item.name}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center group no-underline ${item.active
-                  ? 'bg-blue-600 text-white font-bold shadow-lg shadow-blue-900/40 transform scale-105'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white hover:pl-5'
-                  }`}
-              >
-                <span className={`w-2 h-2 rounded-full mr-3 transition-colors ${item.active ? 'bg-white' : 'bg-gray-700 group-hover:bg-gray-500'}`}></span>
-                {item.name}
-              </a>
-            ))}
+            {(() => {
+              const menuItems = [
+                { name: 'モニタリング', url: SIDEBAR_URLS.MONITORING, active: false },
+                { name: '担当者会議', url: SIDEBAR_URLS.MEETING, active: false },
+                { name: '要介護プラン', url: SIDEBAR_URLS.CARE_PLAN, active: false },
+                { name: '要支援プラン', url: SIDEBAR_URLS.SUPPORT_PLAN, active: false },
+                { name: '入院時情報連携', url: SIDEBAR_URLS.ADMISSION_SHEET, active: true },
+              ];
+
+              // デバッグ用: 環境変数の値を確認
+              console.log('=== サイドバーURL設定（レンダリング時） ===');
+              console.log('Menu Items:', menuItems);
+
+              return menuItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  onClick={(e) => {
+                    console.log(`クリックされたメニュー: ${item.name}`);
+                    console.log(`遷移先URL: ${item.url}`);
+                    console.log(`target属性: ${!item.active ? '_blank' : '(なし)'}`);
+                  }}
+                  {...(!item.active && { target: "_blank", rel: "noopener noreferrer" })}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center group no-underline ${item.active
+                    ? 'bg-blue-600 text-white font-bold shadow-lg shadow-blue-900/40 transform scale-105'
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-white hover:pl-5'
+                    }`}
+                >
+                  <span className={`w-2 h-2 rounded-full mr-3 transition-colors ${item.active ? 'bg-white' : 'bg-gray-700 group-hover:bg-gray-500'}`}></span>
+                  {item.name}
+                </a>
+              ))
+            })()}
           </nav>
           <div className="p-4 border-t border-gray-800">
             <div className="flex items-center space-x-3 px-2 py-2 rounded-lg bg-gray-800/50 cursor-pointer hover:bg-gray-800 transition-colors">
