@@ -1,0 +1,7 @@
+{
+  "name": "CareLink AI - 入院時情報連携シート作成",
+  "description": "厚生労働省の様式に基づき、ケアマネジャーが病院への入院時に提供する「入院時情報連携シート」をAIで自動生成・編集できるアプリケーションです。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
