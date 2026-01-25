@@ -13,7 +13,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 // サイドバーのURL設定を定数として定義
 const SIDEBAR_URLS = {
-  MONITORING: 'https://enrichkkobayashi-bot.github.io/my_project-moni/',
+  MONITORING: 'https://my-projyect-moni.vercel.app/',
   MEETING: 'https://my-project-kaigi.vercel.app/',
   CARE_PLAN: 'https://enrichkkobayashi-bot.github.io/kaigo-plan-system/',
   SUPPORT_PLAN: 'https://care-plan-assistant.vercel.app/',
