@@ -1,26 +1,17 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { analyzeAdmissionInfo } from './services/geminiService';
-import { PatientData, INITIAL_PATIENT_DATA } from './types';
+import { analyzeAdmissionInfo, UploadedFile } from './services/geminiService';
+import { PatientData } from './types';
 import AdmissionSheetForm from './components/AdmissionSheetForm';
-import * as pdfjsLib from 'pdfjs-dist';
-
-// PDF.js workerの設定（ローカルのnode_modulesから読み込む）
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString();
 
 // サイドバーのURL設定を定数として定義
 const SIDEBAR_URLS = {
-  MONITORING: 'https://my-projyect-moni.vercel.app/',
-  MEETING: 'https://my-project-kaigi.vercel.app/',
-  CARE_PLAN: 'https://enrichkkobayashi-bot.github.io/kaigo-plan-system/',
-  SUPPORT_PLAN: 'https://care-plan-assistant.vercel.app/',
-  ADMISSION_SHEET: 'https://carelink-ai-sheet.vercel.app/',
+  MONITORING: 'https://monitoring-test-app.vercel.app',
+  MEETING: 'https://care-minutes-ai.vercel.app',
+  CARE_PLAN: 'https://carelink-test-deploy.vercel.app',
+  SUPPORT_PLAN: 'https://careplan-test-v2.vercel.app',
+  ADMISSION_SHEET: 'https://carelink-ai-sheet.vercel.app',
 };
-
-
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
@@ -28,69 +19,28 @@ const App: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; content: string }>>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; fileData: UploadedFile }>>([]);
 
 
-  // ファイルの内容を読み込む関数（PDFとテキストに対応）
-  const readFileContent = async (file: File): Promise<string> => {
+  // ファイルの内容を読み込む関数（Base64として読み込む）
+  const readFileContent = (file: File): Promise<UploadedFile> => {
     return new Promise((resolve, reject) => {
-      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-        // PDFファイルの場合
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          try {
-            const arrayBuffer = e.target?.result as ArrayBuffer;
-            console.log(`PDFファイル読み込み開始: ${file.name}, サイズ: ${arrayBuffer.byteLength} bytes`);
-
-            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-            const pdf = await loadingTask.promise;
-            console.log(`PDF読み込み成功: ${pdf.numPages}ページ`);
-
-            let fullText = '';
-
-            for (let i = 1; i <= pdf.numPages; i++) {
-              const page = await pdf.getPage(i);
-              const textContent = await page.getTextContent();
-              const pageText = textContent.items
-                .map((item: any) => {
-                  if ('str' in item) {
-                    return item.str;
-                  }
-                  return '';
-                })
-                .filter(text => text.trim().length > 0)
-                .join(' ');
-
-              fullText += pageText + '\n';
-              console.log(`ページ ${i}/${pdf.numPages} 処理完了: ${pageText.length}文字`);
-            }
-
-            console.log(`PDF全体の抽出完了: ${fullText.length}文字`);
-            resolve(fullText.trim());
-          } catch (err) {
-            console.error('PDF読み込みエラー詳細:', err);
-            reject(new Error(`PDFの解析に失敗しました: ${err instanceof Error ? err.message : '不明なエラー'}`));
-          }
-        };
-        reader.onerror = (err) => {
-          console.error('FileReader エラー:', err);
-          reject(new Error('ファイルの読み込みに失敗しました'));
-        };
-        reader.readAsArrayBuffer(file);
-      } else {
-        // テキストファイルの場合
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const text = e.target?.result as string;
-          console.log(`テキストファイル読み込み成功: ${file.name}, ${text.length}文字`);
-          resolve(text);
-        };
-        reader.onerror = (err) => {
-          console.error('テキストファイル読み込みエラー:', err);
-          reject(new Error('テキストファイルの読み込みに失敗しました'));
-        };
-        reader.readAsText(file);
-      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        // result example: "data:application/pdf;base64,VGhpcyB..."
+        const [header, base64Data] = result.split(',');
+        if (!base64Data) {
+          reject(new Error("ファイルの読み込みに失敗しました (Base64データの取得失敗)"));
+          return;
+        }
+        resolve({
+          mimeType: file.type,
+          data: base64Data
+        });
+      };
+      reader.onerror = () => reject(new Error(`ファイル読み込みエラー: ${reader.error?.message}`));
+      reader.readAsDataURL(file);
     });
   };
 
@@ -101,8 +51,8 @@ const App: React.FC = () => {
     for (const file of Array.from<File>(files)) {
       try {
         console.log(`ファイル処理開始: ${file.name}, タイプ: ${file.type}, サイズ: ${file.size} bytes`);
-        const text = await readFileContent(file);
-        setUploadedFiles(prev => [...prev, { name: file.name, content: text }]);
+        const fileData = await readFileContent(file);
+        setUploadedFiles(prev => [...prev, { name: file.name, fileData }]);
         setError(null); // 成功したらエラーをクリア
       } catch (err) {
         console.error(`Error reading file ${file.name}:`, err);
@@ -137,8 +87,8 @@ const App: React.FC = () => {
       for (const file of Array.from<File>(files)) {
         try {
           console.log(`ドロップファイル処理開始: ${file.name}, タイプ: ${file.type}, サイズ: ${file.size} bytes`);
-          const text = await readFileContent(file);
-          setUploadedFiles(prev => [...prev, { name: file.name, content: text }]);
+          const fileData = await readFileContent(file);
+          setUploadedFiles(prev => [...prev, { name: file.name, fileData }]);
           setError(null); // 成功したらエラーをクリア
         } catch (err) {
           console.error(`Error reading file ${file.name}:`, err);
@@ -151,21 +101,9 @@ const App: React.FC = () => {
 
   const handleAnalyze = async () => {
     console.log('=== AI分析開始 ===');
-    console.log('uploadedFiles:', uploadedFiles);
-    console.log('uploadedFiles.length:', uploadedFiles.length);
+    console.log('uploadedFiles count:', uploadedFiles.length);
 
-    // アップロードされたファイルの内容を結合
-    const uploadedText = uploadedFiles.map(file => file.content).join('\n\n');
-    console.log('uploadedText length:', uploadedText.length);
-
-    console.log('inputText length:', inputText.length);
-
-    // inputTextとuploadedTextを結合（両方ある場合）
-    const combinedText = [uploadedText, inputText].filter(t => t.trim()).join('\n\n');
-    console.log('combinedText length:', combinedText.length);
-
-    if (!combinedText.trim()) {
-      console.log('エラー: combinedTextが空です');
+    if (uploadedFiles.length === 0 && !inputText.trim()) {
       setError("分析するテキストを入力するかファイルをアップロードしてください。");
       return;
     }
@@ -173,9 +111,13 @@ const App: React.FC = () => {
     setIsAnalyzing(true);
     setError(null);
     try {
-      const result = await analyzeAdmissionInfo(combinedText);
+      // アップロードされたファイルデータのみを抽出
+      const filesToAnalyze = uploadedFiles.map(f => f.fileData);
+
+      const result = await analyzeAdmissionInfo(filesToAnalyze, inputText);
       setPatientData(result);
     } catch (err) {
+      console.error(err);
       setError(err instanceof Error ? err.message : "予期せぬエラーが発生しました。");
     } finally {
       setIsAnalyzing(false);
@@ -257,7 +199,7 @@ const App: React.FC = () => {
                 {
                   name: '入院時情報連携',
                   url: SIDEBAR_URLS.ADMISSION_SHEET,
-                  active: true,
+                  active: false,
                   icon: (
                     <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>

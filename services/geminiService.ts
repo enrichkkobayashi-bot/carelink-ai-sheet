@@ -2,7 +2,12 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { PatientData } from "../types";
 
-export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> => {
+export interface UploadedFile {
+  mimeType: string;
+  data: string;
+}
+
+export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: string): Promise<PatientData> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -11,9 +16,21 @@ export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> =
 
   const ai = new GoogleGenAI({ apiKey });
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash-exp",
-    contents: `
+  const parts: any[] = [];
+
+  // ファイルを追加
+  files.forEach(file => {
+    parts.push({
+      inlineData: {
+        mimeType: file.mimeType,
+        data: file.data
+      }
+    });
+  });
+
+  // プロンプトテキストを追加
+  parts.push({
+    text: `
       以下の介護相談記録、アセスメント、または患者メモから、厚生労働省の「入院時情報連携シート」に必要な情報を抽出してください。
       
       特に「認知機能・精神状態」に関しては、アセスメントシートの記述を詳細に反映してください。以下の情報が含まれている場合は必ず抽出して記述してください：
@@ -23,7 +40,6 @@ export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> =
       - 理解力・判断力の低下の有無
       - 問題行動（BPSD）の有無と具体的な内容（徘徊、暴言、暴力、拒絶など）
       - 精神的な安定性、感情の起伏
-      - 精神的な安定性、感情の起伏
       - 昼夜逆転や睡眠障害の有無
 
       さらに以下のADL情報も抽出してください：
@@ -32,7 +48,7 @@ export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> =
       - 聴力：聴力の状態（「良好」「低下」など）と詳細
       
       【入力テキスト】:
-      ${text}
+      ${textInput}
       
       【制約】:
       - 不明な項目は空欄（""）にしてください。
@@ -40,7 +56,12 @@ export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> =
       - ADL（歩行、入浴、排泄、食事、移乗）は「自立」「一部介助」「全介助」のいずれかから最も近いものを選択してください。
       - 性別は「男性」「女性」から選択してください。
       - 介護度は「要支援1〜2」「要介護1〜5」「自立」から選択してください。
-    `,
+    `
+  });
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash-exp",
+    contents: [{ role: 'user', parts: parts }],
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -103,7 +124,9 @@ export const analyzeAdmissionInfo = async (text: string): Promise<PatientData> =
   });
 
   try {
-    const data = JSON.parse(response.text);
+    const text = response.text;
+    if (!text) throw new Error("テキストが生成されませんでした。");
+    const data = JSON.parse(text);
     return data as PatientData;
   } catch (error) {
     console.error("Failed to parse Gemini response:", error);
