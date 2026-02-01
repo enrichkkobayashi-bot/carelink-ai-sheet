@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, HarmCategory, HarmBlockThreshold } from "@google/genai";
 import { PatientData } from "../types";
 
 export interface UploadedFile {
@@ -131,16 +131,25 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
         },
         required: ["name"]
       }
+    },
+    safetySettings: [
+      { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+      { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
+      { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+      { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+    ]
+      ]
     }
   });
 
-  try {
-    const text = response.text;
-    if (!text) throw new Error("テキストが生成されませんでした。");
-    const data = JSON.parse(text);
-    return data as PatientData;
-  } catch (error) {
-    console.error("Failed to parse Gemini response:", error);
-    throw new Error("情報の抽出に失敗しました。内容を確認してください。");
-  }
+try {
+  const text = response.text;
+  if (!text) throw new Error("テキストが生成されませんでした。");
+  const data = JSON.parse(text);
+  return data as PatientData;
+} catch (error) {
+  console.error("Failed to parse Gemini response:", error);
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  throw new Error(`情報の抽出に失敗しました: ${errorMessage}`);
+}
 };
