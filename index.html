@@ -37,10 +37,8 @@
 
       .page-break {
         page-break-after: always;
-        /* page-break-inside: avoid; Removed to prevent overflow loops */
         height: auto;
-        min-height: 290mm;
-        /* Force close to A4 height to ensure break happens at right spot if content is short? No, let's just break after. */
+        /* Remved min-height to avoid double breaking if content naturally fills page */
       }
 
       /* フォントサイズを微調整 */
