@@ -65,6 +65,8 @@ export interface PatientData {
   livingArrangement: string; // 独居・家族と同居等
   keyPerson: string;
   housingEnvironment: string;
+  pastLife: string; // 今までの生活
+  familyIntentions: string; // 本人・家族の意向
 
   // 現在利用中のサービス
   currentServices: string;
@@ -124,6 +126,8 @@ export const INITIAL_PATIENT_DATA: PatientData = {
   livingArrangement: '独居',
   keyPerson: '',
   housingEnvironment: '',
+  pastLife: '',
+  familyIntentions: '',
   currentServices: '',
   notes: ''
 };

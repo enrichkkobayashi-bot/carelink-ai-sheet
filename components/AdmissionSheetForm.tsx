@@ -202,8 +202,14 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
           <div className="col-span-8 border-b border-gray-800">
             <Input label="キーパーソン" value={data.keyPerson} field="keyPerson" />
           </div>
+          <div className="col-span-12 border-b border-gray-800">
+            <TextArea label="住環境（段差、手すり等）" value={data.housingEnvironment} field="housingEnvironment" rows={1} />
+          </div>
+          <div className="col-span-12 border-b border-gray-800">
+            <TextArea label="今までの生活（職業・趣味・生活歴）" value={data.pastLife} field="pastLife" rows={2} />
+          </div>
           <div className="col-span-12">
-            <TextArea label="住環境（段差、手すり等）" value={data.housingEnvironment} field="housingEnvironment" />
+            <TextArea label="本人・家族の意向" value={data.familyIntentions} field="familyIntentions" rows={2} />
           </div>
         </div>
       </div>

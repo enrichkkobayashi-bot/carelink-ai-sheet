@@ -41,6 +41,8 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
       - 問題行動（BPSD）の有無と具体的な内容（徘徊、暴言、暴力、拒絶など）
       - 精神的な安定性、感情の起伏
       - 昼夜逆転や睡眠障害の有無
+      - 今までの生活（職業、趣味、主な生活歴など）
+      - 本人・家族の意向（「自宅に帰りたい」「施設入所希望」など）
 
       さらに以下のADL情報も抽出してください：
       - 歩行：屋内と屋外それぞれの状況（「自立」「一部介助」「全介助」など）
@@ -122,6 +124,8 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
           livingArrangement: { type: Type.STRING },
           keyPerson: { type: Type.STRING },
           housingEnvironment: { type: Type.STRING },
+          pastLife: { type: Type.STRING },
+          familyIntentions: { type: Type.STRING },
           currentServices: { type: Type.STRING },
           notes: { type: Type.STRING }
         },
