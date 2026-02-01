@@ -13,7 +13,7 @@ interface AdmissionSheetFormProps {
 
 const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange, isPrintMode = false }) => {
   const Input = ({ label, value, field, type = "text", placeholder = "" }: { label: string, value: string, field: keyof PatientData, type?: string, placeholder?: string }) => (
-    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-1' : 'p-2'}`}>
+    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-0.5' : 'p-2'}`}>
       <label className="text-xs font-bold text-gray-600 mb-1">{label}</label>
       {isPrintMode ? (
         <span className="min-h-[1.5rem] whitespace-pre-wrap">{value || 'ー'}</span>
@@ -30,7 +30,7 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
   );
 
   const Select = ({ label, value, field, options }: { label: string, value: string, field: keyof PatientData, options: string[] }) => (
-    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-1' : 'p-2'}`}>
+    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-0.5' : 'p-2'}`}>
       <label className="text-xs font-bold text-gray-600 mb-1">{label}</label>
       {isPrintMode ? (
         <span className="text-sm font-medium">{value || 'ー'}</span>
@@ -48,7 +48,7 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
   );
 
   const TextArea = ({ label, value, field, rows = 3 }: { label: string, value: string, field: keyof PatientData, rows?: number }) => (
-    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-1' : 'p-2'}`}>
+    <div className={`flex flex-col border-b border-gray-300 ${isPrintMode ? 'p-0.5' : 'p-2'}`}>
       <label className="text-xs font-bold text-gray-600 mb-1">{label}</label>
       {isPrintMode ? (
         <span className="min-h-[3rem] text-sm whitespace-pre-wrap leading-relaxed">{value || 'ー'}</span>
@@ -66,7 +66,7 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
   return (
     <div className={`mx-auto max-w-[210mm] bg-white ${isPrintMode ? '' : 'shadow-2xl mb-10'}`}>
       {/* ページ 1 */}
-      <div className={`${isPrintMode ? 'p-4 page-break' : 'p-8'}`}>
+      <div className={`${isPrintMode ? 'p-0 px-2 page-break' : 'p-8'}`}>
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold border-b-2 border-black inline-block px-10 pb-1">入院時情報連携シート</h1>
           <div className="mt-2 text-right text-xs space-y-1">
@@ -215,7 +215,7 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
       </div>
 
       {/* ページ 2 */}
-      <div className={`${isPrintMode ? 'p-4' : 'p-8 border-t-2 border-dashed border-blue-200 mt-10 pt-10'}`}>
+      <div className={`${isPrintMode ? 'p-0 px-2' : 'p-8 border-t-2 border-dashed border-blue-200 mt-10 pt-10'}`}>
         {!isPrintMode && <div className="text-center mb-6 text-blue-500 font-bold">2ページ目</div>}
 
         <div className="grid grid-cols-12 border-t border-l border-r border-gray-800">

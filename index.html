@@ -20,6 +20,14 @@
         background-color: white !important;
         padding: 0 !important;
         margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+      }
+
+      html {
+        height: auto !important;
+        overflow: visible !important;
       }
 
       @page {
@@ -29,7 +37,10 @@
 
       .page-break {
         page-break-after: always;
-        page-break-inside: avoid;
+        /* page-break-inside: avoid; Removed to prevent overflow loops */
+        height: auto;
+        min-height: 290mm;
+        /* Force close to A4 height to ensure break happens at right spot if content is short? No, let's just break after. */
       }
 
       /* フォントサイズを微調整 */
