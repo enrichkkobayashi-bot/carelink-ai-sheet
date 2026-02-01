@@ -8,7 +8,7 @@ export interface UploadedFile {
 }
 
 export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: string): Promise<PatientData> => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     throw new Error("APIキーが設定されていません。.env.localファイルを確認してください。");
