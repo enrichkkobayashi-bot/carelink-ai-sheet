@@ -214,50 +214,65 @@ const AdmissionSheetForm: React.FC<AdmissionSheetFormProps> = ({ data, onChange,
 
         <div className="grid grid-cols-12 border-t border-l border-r border-gray-800">
           <div className="col-span-12 p-1 bg-blue-100 border-b border-gray-800 font-bold text-xs text-blue-800">ADL（身体機能・自立度）</div>
+
+          {/* 1. 歩行（屋内） */}
           <div className="col-span-4 border-b border-r border-gray-800">
-            <Select label="歩行" value={data.adlWalking} field="adlWalking" options={ADL_OPTIONS} />
+            <Select label="1. 歩行（屋内）" value={data.adlWalkingIndoor} field="adlWalkingIndoor" options={ADL_OPTIONS} />
           </div>
-          <div className="col-span-4 border-b border-r border-gray-800">
-            <Select label="移乗" value={data.adlTransferring} field="adlTransferring" options={ADL_OPTIONS} />
-          </div>
-          <div className="col-span-4 border-b border-gray-800">
-            <Select label="排泄" value={data.adlToileting} field="adlToileting" options={ADL_OPTIONS} />
+          <div className="col-span-8 border-b border-gray-800">
+            <TextArea label="歩行（屋内）の詳細" value={data.adlWalkingIndoorDetails} field="adlWalkingIndoorDetails" rows={2} />
           </div>
 
-          {/* 詳細情報 */}
+          {/* 2. 歩行（屋外） */}
           <div className="col-span-4 border-b border-r border-gray-800">
-            <TextArea label="歩行の詳細" value={data.adlWalkingDetails} field="adlWalkingDetails" rows={3} />
+            <Select label="2. 歩行（屋外）" value={data.adlWalkingOutdoor} field="adlWalkingOutdoor" options={ADL_OPTIONS} />
           </div>
-          <div className="col-span-4 border-b border-r border-gray-800">
-            <TextArea label="移乗の詳細" value={data.adlTransferringDetails} field="adlTransferringDetails" rows={3} />
-          </div>
-          <div className="col-span-4 border-b border-gray-800">
-            <TextArea label="排泄の詳細" value={data.adlToiletingDetails} field="adlToiletingDetails" rows={3} />
-          </div>
-          <div className="col-span-6 border-b border-r border-gray-800">
-            <Select label="入浴" value={data.adlBathing} field="adlBathing" options={ADL_OPTIONS} />
-          </div>
-          <div className="col-span-6 border-b border-gray-800">
-            <Select label="食事" value={data.adlEating} field="adlEating" options={ADL_OPTIONS} />
+          <div className="col-span-8 border-b border-gray-800">
+            <TextArea label="歩行（屋外）の詳細" value={data.adlWalkingOutdoorDetails} field="adlWalkingOutdoorDetails" rows={2} />
           </div>
 
-          {/* 入浴・食事の詳細 */}
-          <div className="col-span-6 border-b border-r border-gray-800">
+          {/* 3. 排泄 */}
+          <div className="col-span-4 border-b border-r border-gray-800">
+            <Select label="3. 排泄" value={data.adlToileting} field="adlToileting" options={ADL_OPTIONS} />
+          </div>
+          <div className="col-span-8 border-b border-gray-800">
+            <TextArea label="排泄の詳細" value={data.adlToiletingDetails} field="adlToiletingDetails" rows={2} />
+          </div>
+
+          {/* 4. 入浴 */}
+          <div className="col-span-4 border-b border-r border-gray-800">
+            <Select label="4. 入浴" value={data.adlBathing} field="adlBathing" options={ADL_OPTIONS} />
+          </div>
+          <div className="col-span-8 border-b border-gray-800">
             <TextArea label="入浴の詳細" value={data.adlBathingDetails} field="adlBathingDetails" rows={2} />
           </div>
-          <div className="col-span-6 border-b border-gray-800">
+
+          {/* 5. 食事 */}
+          <div className="col-span-4 border-b border-r border-gray-800">
+            <Select label="5. 食事" value={data.adlEating} field="adlEating" options={ADL_OPTIONS} />
+          </div>
+          <div className="col-span-8 border-b border-gray-800">
             <TextArea label="食事の詳細" value={data.adlEatingDetails} field="adlEatingDetails" rows={2} />
           </div>
 
+          {/* 6. 麻痺・褥瘡 */}
+          <div className="col-span-6 border-b border-r border-gray-800">
+            <TextArea label="6. 麻痺の有無・部位" value={data.paralysis} field="paralysis" rows={3} />
+          </div>
+          <div className="col-span-6 border-b border-gray-800">
+            <TextArea label="褥瘡の有無・部位" value={data.bedsores} field="bedsores" rows={3} />
+          </div>
+
+
           {/* 口腔・視力・聴力 */}
           <div className="col-span-4 border-b border-r border-gray-800">
-            <Select label="口腔の状態" value={data.adlOral} field="adlOral" options={ADL_OPTIONS} />
+            <Select label="7. 口腔の状態" value={data.adlOral} field="adlOral" options={ADL_OPTIONS} />
           </div>
           <div className="col-span-4 border-b border-r border-gray-800">
-            <Select label="視力の状態" value={data.adlVision} field="adlVision" options={SENSORY_OPTIONS} />
+            <Select label="8. 視力の状態" value={data.adlVision} field="adlVision" options={SENSORY_OPTIONS} />
           </div>
           <div className="col-span-4 border-b border-gray-800">
-            <Select label="聴力の状態" value={data.adlHearing} field="adlHearing" options={SENSORY_OPTIONS} />
+            <Select label="9. 聴力の状態" value={data.adlHearing} field="adlHearing" options={SENSORY_OPTIONS} />
           </div>
 
           {/* 口腔・視力・聴力 詳細 */}

@@ -38,16 +38,18 @@ export interface PatientData {
   keyMedicalHistory: string;
 
   // 生活状況・ADL
-  adlWalking: string; // 自立・一部介助・全介助
-  adlWalkingDetails: string; // 歩行の詳細情報
+  adlWalkingIndoor: string; // 歩行（屋内）
+  adlWalkingIndoorDetails: string;
+  adlWalkingOutdoor: string; // 歩行（屋外）
+  adlWalkingOutdoorDetails: string;
   adlBathing: string;
   adlBathingDetails: string; // 入浴の詳細情報
   adlToileting: string;
   adlToiletingDetails: string; // 排泄の詳細情報
   adlEating: string;
   adlEatingDetails: string; // 食事の詳細情報
-  adlTransferring: string;
-  adlTransferringDetails: string; // 移乗の詳細情報
+  paralysis: string; // 麻痺
+  bedsores: string; // 褥瘡
   adlOral: string; // 口腔（歯・嚥下・口腔ケア） - 状態
   adlOralDetails: string; // 口腔 - 詳細
   adlVision: string; // 視力 - 状態
@@ -99,16 +101,18 @@ export const INITIAL_PATIENT_DATA: PatientData = {
   pastMedicalHistory: '',
   allergies: '',
   keyMedicalHistory: '',
-  adlWalking: '自立',
-  adlWalkingDetails: '',
+  adlWalkingIndoor: '自立',
+  adlWalkingIndoorDetails: '',
+  adlWalkingOutdoor: '自立',
+  adlWalkingOutdoorDetails: '',
   adlBathing: '自立',
   adlBathingDetails: '',
   adlToileting: '自立',
   adlToiletingDetails: '',
   adlEating: '自立',
   adlEatingDetails: '',
-  adlTransferring: '自立',
-  adlTransferringDetails: '',
+  paralysis: 'なし',
+  bedsores: 'なし',
   adlOral: '',
   adlOralDetails: '',
   adlVision: '',

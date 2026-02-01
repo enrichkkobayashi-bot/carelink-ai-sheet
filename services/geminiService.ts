@@ -43,6 +43,10 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
       - 昼夜逆転や睡眠障害の有無
 
       さらに以下のADL情報も抽出してください：
+      - 歩行：屋内と屋外それぞれの状況（「自立」「一部介助」「全介助」など）
+      - 入浴、排泄、食事の状況
+      - 麻痺の有無と部位（「右片麻痺」「なし」など）
+      - 褥瘡の有無と部位・状態（「仙骨部に発赤あり」「なし」など）
       - 口腔：歯の状態や嚥下状態（「良好」「問題あり」など）と詳細
       - 視力：視力の状態（「良好」「低下」など）と詳細
       - 聴力：聴力の状態（「良好」「低下」など）と詳細
@@ -53,7 +57,8 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
       【制約】:
       - 不明な項目は空欄（""）にしてください。
       - 氏名にフリガナがある場合は抽出してください。
-      - ADL（歩行、入浴、排泄、食事、移乗）は「自立」「一部介助」「全介助」のいずれかから最も近いものを選択してください。
+      - ADL（歩行屋内、歩行屋外、入浴、排泄、食事）は「自立」「一部介助」「全介助」のいずれかから最も近いものを選択してください。
+      - 麻痺・褥瘡は「あり」「なし」または具体的な状況を抽出してください。
       - 性別は「男性」「女性」から選択してください。
       - 介護度は「要支援1〜2」「要介護1〜5」「自立」から選択してください。
     `
@@ -94,16 +99,18 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
           pastMedicalHistory: { type: Type.STRING },
           allergies: { type: Type.STRING },
           keyMedicalHistory: { type: Type.STRING },
-          adlWalking: { type: Type.STRING },
-          adlWalkingDetails: { type: Type.STRING },
+          adlWalkingIndoor: { type: Type.STRING },
+          adlWalkingIndoorDetails: { type: Type.STRING },
+          adlWalkingOutdoor: { type: Type.STRING },
+          adlWalkingOutdoorDetails: { type: Type.STRING },
           adlBathing: { type: Type.STRING },
           adlBathingDetails: { type: Type.STRING },
           adlToileting: { type: Type.STRING },
           adlToiletingDetails: { type: Type.STRING },
           adlEating: { type: Type.STRING },
           adlEatingDetails: { type: Type.STRING },
-          adlTransferring: { type: Type.STRING },
-          adlTransferringDetails: { type: Type.STRING },
+          paralysis: { type: Type.STRING },
+          bedsores: { type: Type.STRING },
           adlOral: { type: Type.STRING },
           adlOralDetails: { type: Type.STRING },
           adlVision: { type: Type.STRING },
