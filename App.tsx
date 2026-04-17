@@ -238,21 +238,21 @@ const App: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto h-screen bg-gray-50 relative">
-          <div className="p-6 md:p-12 max-w-6xl mx-auto">
-            <header className="text-center mb-12">
-              <h1 className="text-4xl font-extrabold text-gray-900 mb-4">AI 入院時情報連携</h1>
-              <p className="text-lg text-gray-600">
+          <div className="p-6 md:p-6 max-w-6xl mx-auto">
+            <header className="text-center mb-6">
+              <h1 className="text-2xl font-extrabold text-gray-900 mb-2">AI 入院時情報連携</h1>
+              <p className="text-base text-gray-600">
                 面談の記録やアセスメント、患者メモを入力して、<br />
                 厚生労働省様式の入院時情報連携シートを自動生成します。
               </p>
             </header>
 
             {!patientData ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {/* Left: Upload Zone */}
                 <div className="flex flex-col">
                   <label
-                    className={`flex flex-col items-center justify-center w-full h-80 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${isDragging
+                    className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${isDragging
                       ? 'border-indigo-500 bg-indigo-50'
                       : 'border-gray-300 bg-white hover:bg-gray-50'
                       }`}
@@ -261,23 +261,23 @@ const App: React.FC = () => {
                     onDrop={handleDrop}
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg className="w-12 h-12 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                       </svg>
-                      <p className="mb-2 text-lg font-bold text-gray-700">資料をアップロード</p>
-                      <p className="text-sm text-gray-500">PDF ・ テキスト (複数可)</p>
+                      <p className="mb-1 text-base font-bold text-gray-700">資料をアップロード</p>
+                      <p className="text-xs text-gray-500">PDF ・ テキスト (複数可)</p>
                     </div>
                     <input type="file" className="hidden" accept=".txt,.pdf" onChange={handleFileUpload} multiple />
                   </label>
 
                   {/* Uploaded Files List */}
                   {uploadedFiles.length > 0 && (
-                    <div className="mt-4 bg-white rounded-xl border border-gray-200 p-4">
-                      <h3 className="text-sm font-bold text-gray-700 mb-2">📎 アップロード済みファイル</h3>
-                      <ul className="space-y-2">
+                    <div className="mt-3 bg-white rounded-xl border border-gray-200 p-3">
+                      <h3 className="text-xs font-bold text-gray-700 mb-2">📎 アップロード済みファイル</h3>
+                      <ul className="space-y-1">
                         {uploadedFiles.map((file, index) => (
-                          <li key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg">
-                            <span className="text-sm text-gray-700 truncate flex-1">{file.name}</span>
+                          <li key={index} className="flex items-center justify-between bg-gray-50 px-3 py-1.5 rounded-lg">
+                            <span className="text-xs text-gray-700 truncate flex-1">{file.name}</span>
                             <button
                               onClick={() => setUploadedFiles(prev => prev.filter((_, i) => i !== index))}
                               className="ml-2 text-red-500 hover:text-red-700 transition-colors"
@@ -295,9 +295,9 @@ const App: React.FC = () => {
                 </div>
 
                 {/* Right: Text Input */}
-                <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col">
+                <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-64">
                   <textarea
-                    className="flex-grow w-full h-full p-4 text-gray-700 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 resize-none transition-all"
+                    className="flex-grow w-full h-full p-3 text-sm text-gray-700 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 resize-none transition-all"
                     placeholder="相談記録の要約やアセスメント情報を入力してください..."
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
@@ -305,14 +305,14 @@ const App: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="mb-6 flex justify-between items-center bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+              <div className="mb-6 flex justify-between items-center bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-sm">
                 <span className="text-indigo-700 font-medium">✨ AIが情報を抽出しました。必要に応じて修正してください。</span>
                 <div className="space-x-4">
                   <button
                     onClick={handlePrint}
-                    className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-md"
                   >
-                    🖨️ A4で印刷 / PDF保存
+                    🖨️ 印刷 / PDF保存
                   </button>
                   <button
                     onClick={handleReset}
@@ -329,7 +329,7 @@ const App: React.FC = () => {
                 <button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing}
-                  className={`flex items-center space-x-2 px-10 py-4 text-xl font-bold rounded-2xl transition-all shadow-xl ${isAnalyzing ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-400 hover:bg-indigo-500 text-white'
+                  className={`flex items-center space-x-2 px-8 py-3 text-lg font-bold rounded-2xl transition-all shadow-xl ${isAnalyzing ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-400 hover:bg-indigo-500 text-white'
                     }`}
                 >
                   {isAnalyzing ? (

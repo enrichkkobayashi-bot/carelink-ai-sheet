@@ -58,6 +58,8 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
       
       【制約】:
       - 不明な項目は空欄（""）にしてください。
+      - 各項目は長文のまま丸写しせず、意味を保ちながら可能な限り簡潔に要約して抽出してください。
+      - 備考（notes）などの特定の項目に、元のテキスト全体をコピー＆ペーストすることは絶対に避けてください。
       - 氏名にフリガナがある場合は抽出してください。
       - ADL（歩行屋内、歩行屋外、入浴、排泄、食事）は「自立」「一部介助」「全介助」のいずれかから最も近いものを選択してください。
       - 麻痺・褥瘡は「あり」「なし」または具体的な状況を抽出してください。
@@ -66,68 +68,69 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
     `
   });
 
-  const response = await ai.models.generateContent({
+  const response = await (ai.models as any).generateContent({
     model: "gemini-2.0-flash",
     contents: [{ role: 'user', parts: parts }],
     config: {
+      maxOutputTokens: 8192,
       responseMimeType: "application/json",
       responseSchema: {
-        type: Type.OBJECT,
+        type: (Type as any).OBJECT,
         properties: {
-          nameKana: { type: Type.STRING },
-          name: { type: Type.STRING },
-          birthDate: { type: Type.STRING },
-          age: { type: Type.STRING },
-          gender: { type: Type.STRING },
-          address: { type: Type.STRING },
-          phone: { type: Type.STRING },
-          patientId: { type: Type.STRING },
-          longTermCareLevel: { type: Type.STRING },
-          entryDate: { type: Type.STRING },
-          admissionDate: { type: Type.STRING },
-          informationProvidedDate: { type: Type.STRING },
-          emergencyContact1: { type: Type.STRING },
-          emergencyContact1Relation: { type: Type.STRING },
-          emergencyContact1Phone: { type: Type.STRING },
-          careManagerName: { type: Type.STRING },
-          careManagerOffice: { type: Type.STRING },
-          careManagerPhone: { type: Type.STRING },
-          careManagerFax: { type: Type.STRING },
-          medicalInstitutionName: { type: Type.STRING },
-          doctorName: { type: Type.STRING },
-          medicalPhone: { type: Type.STRING },
-          primaryDiagnosis: { type: Type.STRING },
-          secondaryDiagnosis: { type: Type.STRING },
-          pastMedicalHistory: { type: Type.STRING },
-          allergies: { type: Type.STRING },
-          keyMedicalHistory: { type: Type.STRING },
-          adlWalkingIndoor: { type: Type.STRING },
-          adlWalkingIndoorDetails: { type: Type.STRING },
-          adlWalkingOutdoor: { type: Type.STRING },
-          adlWalkingOutdoorDetails: { type: Type.STRING },
-          adlBathing: { type: Type.STRING },
-          adlBathingDetails: { type: Type.STRING },
-          adlToileting: { type: Type.STRING },
-          adlToiletingDetails: { type: Type.STRING },
-          adlEating: { type: Type.STRING },
-          adlEatingDetails: { type: Type.STRING },
-          paralysis: { type: Type.STRING },
-          bedsores: { type: Type.STRING },
-          adlOral: { type: Type.STRING },
-          adlOralDetails: { type: Type.STRING },
-          adlVision: { type: Type.STRING },
-          adlVisionDetails: { type: Type.STRING },
-          adlHearing: { type: Type.STRING },
-          adlHearingDetails: { type: Type.STRING },
-          cognitiveStatus: { type: Type.STRING },
-          mentalHealthSymptoms: { type: Type.STRING },
-          livingArrangement: { type: Type.STRING },
-          keyPerson: { type: Type.STRING },
-          housingEnvironment: { type: Type.STRING },
-          pastLife: { type: Type.STRING },
-          familyIntentions: { type: Type.STRING },
-          currentServices: { type: Type.STRING },
-          notes: { type: Type.STRING }
+          nameKana: { type: (Type as any).STRING },
+          name: { type: (Type as any).STRING },
+          birthDate: { type: (Type as any).STRING },
+          age: { type: (Type as any).STRING },
+          gender: { type: (Type as any).STRING },
+          address: { type: (Type as any).STRING },
+          phone: { type: (Type as any).STRING },
+          patientId: { type: (Type as any).STRING },
+          longTermCareLevel: { type: (Type as any).STRING },
+          entryDate: { type: (Type as any).STRING },
+          admissionDate: { type: (Type as any).STRING },
+          informationProvidedDate: { type: (Type as any).STRING },
+          emergencyContact1: { type: (Type as any).STRING },
+          emergencyContact1Relation: { type: (Type as any).STRING },
+          emergencyContact1Phone: { type: (Type as any).STRING },
+          careManagerName: { type: (Type as any).STRING },
+          careManagerOffice: { type: (Type as any).STRING },
+          careManagerPhone: { type: (Type as any).STRING },
+          careManagerFax: { type: (Type as any).STRING },
+          medicalInstitutionName: { type: (Type as any).STRING },
+          doctorName: { type: (Type as any).STRING },
+          medicalPhone: { type: (Type as any).STRING },
+          primaryDiagnosis: { type: (Type as any).STRING },
+          secondaryDiagnosis: { type: (Type as any).STRING },
+          pastMedicalHistory: { type: (Type as any).STRING },
+          allergies: { type: (Type as any).STRING },
+          keyMedicalHistory: { type: (Type as any).STRING },
+          adlWalkingIndoor: { type: (Type as any).STRING },
+          adlWalkingIndoorDetails: { type: (Type as any).STRING },
+          adlWalkingOutdoor: { type: (Type as any).STRING },
+          adlWalkingOutdoorDetails: { type: (Type as any).STRING },
+          adlBathing: { type: (Type as any).STRING },
+          adlBathingDetails: { type: (Type as any).STRING },
+          adlToileting: { type: (Type as any).STRING },
+          adlToiletingDetails: { type: (Type as any).STRING },
+          adlEating: { type: (Type as any).STRING },
+          adlEatingDetails: { type: (Type as any).STRING },
+          paralysis: { type: (Type as any).STRING },
+          bedsores: { type: (Type as any).STRING },
+          adlOral: { type: (Type as any).STRING },
+          adlOralDetails: { type: (Type as any).STRING },
+          adlVision: { type: (Type as any).STRING },
+          adlVisionDetails: { type: (Type as any).STRING },
+          adlHearing: { type: (Type as any).STRING },
+          adlHearingDetails: { type: (Type as any).STRING },
+          cognitiveStatus: { type: (Type as any).STRING },
+          mentalHealthSymptoms: { type: (Type as any).STRING },
+          livingArrangement: { type: (Type as any).STRING },
+          keyPerson: { type: (Type as any).STRING },
+          housingEnvironment: { type: (Type as any).STRING },
+          pastLife: { type: (Type as any).STRING },
+          familyIntentions: { type: (Type as any).STRING },
+          currentServices: { type: (Type as any).STRING },
+          notes: { type: (Type as any).STRING }
         },
         required: ["name"]
       }
@@ -138,18 +141,20 @@ export const analyzeAdmissionInfo = async (files: UploadedFile[], textInput: str
       { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
       { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
     ]
-      ]
-    }
   });
 
-try {
-  const text = response.text;
-  if (!text) throw new Error("テキストが生成されませんでした。");
-  const data = JSON.parse(text);
-  return data as PatientData;
-} catch (error) {
-  console.error("Failed to parse Gemini response:", error);
-  const errorMessage = error instanceof Error ? error.message : String(error);
-  throw new Error(`情報の抽出に失敗しました: ${errorMessage}`);
-}
+  try {
+    const text = (response as any).text;
+    if (!text) throw new Error("テキストが生成されませんでした。");
+    const data = JSON.parse(text);
+    return data as PatientData;
+  } catch (error) {
+    console.error("Failed to parse Gemini response:", error);
+    const rawText = (response as any)?.text;
+    if (rawText) {
+      console.error("▼▼▼ パースに失敗した生のテキストデータ ▼▼▼\n", rawText);
+    }
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`情報の抽出に失敗しました: ${errorMessage}`);
+  }
 };
